@@ -1,0 +1,12 @@
+{
+  "name": "restaurant-application",
+  "displayName": "restaurant-application",
+  "expo": {
+    "name": "restaurant-application",
+    "slug": "restaurant-application",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
