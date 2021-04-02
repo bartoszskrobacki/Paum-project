@@ -6,27 +6,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Inputs from "../components/Inputs";
 import Card from "../components/Card";
 import firebase from "firebase";
-
-import {loginAction} from "../actions/loginAction";
+import {signUpAction} from "../actions/signUpAction";
+import {authAction} from "../actions/authAction";
 import {connect} from "react-redux";
 
 
 const LoginScreen = props => {
 
-    const loginUser = (login, password) => {
-        try{
-            firebase.auth().signInWithEmailAndPassword(login, password).then(function () {
-                props.loginAction(login);
-            })
-        }
-        catch (e) {
-            Alert.alert('Wrong login or password', 'Try to insert your data one more time', [{text:'Okay',style: 'destructive'}]);
-        }
-    };
+
+    const user = {
+        email: 'Barti@interia.eu',
+        password: 'Oskar212!',
+        firstName: 'Bartosz',
+        lastName: 'Skrobacki',
+        role: 'waiter',
+    }
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-
+    const credentials = {login, password};
     const loginInputHandler = (enteredText) => {
         setLogin(enteredText);
     };
@@ -42,9 +40,9 @@ const LoginScreen = props => {
         <View style={styles.screen} >
         <Card>
             <View style={styles.loginContainer}>
-                <Inputs placeholder="Login" onChangeText={loginInputHandler} value={login}/>
+                <Inputs placeholder="Email" onChangeText={loginInputHandler} value={login}/>
             <Inputs placeholder="Hasło" secureTextEntry textContentType="password" onChangeText={passwordInputHandler} value={password}/>
-            <Button style={styles.loginButton} title='Login' color='#4d4d4d'  onPress ={()=>{  loginUser(login, password)}}/>
+            <Button style={styles.loginButton} title='Login' color='#4d4d4d'  onPress ={()=>{  props.authAction(login, password)} }/>
         </View>
         </Card>
         </View>
@@ -71,8 +69,8 @@ const styles = StyleSheet.create({
 
 function  mapStateToProps(state) {
 return{
-    login: state.userState
+    login: state.authState
 }
 }
 
-export default connect (mapStateToProps,{loginAction})(LoginScreen);
+export default connect (mapStateToProps,{authAction, signUpAction})(LoginScreen);

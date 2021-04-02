@@ -10,12 +10,12 @@ const MenuWaiterScreen = props => {
         <View style={styles.screen} >
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                    <Button title='Nowe Zamówienie'  onPress = {() => {props.navigation.navigate('ChooseTable')}}/>
+                    <Button title='Create new Order'  onPress = {() => {props.navigation.navigate('ChooseTable')}}/>
                 </View>
             </Card>
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                    <Button title='Sprawdz aktualne zamowienia'  onPress = {() => {props.navigation.navigate('ListWaiter')}}/>
+                    <Button title='Check list of orders'  onPress = {() => {props.navigation.navigate('Waiter List of Orders')}}/>
                 </View>
             </Card>
         </View>

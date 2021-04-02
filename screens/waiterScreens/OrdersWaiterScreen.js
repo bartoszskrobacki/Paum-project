@@ -4,31 +4,34 @@ import firebase from "firebase";
 import Modal from 'react-native-modalbox';
 import CategoryOfItems from "../../components/foodMenuComponents/CategoryOfItems";
 import {connect} from "react-redux";
-import MealItem from "../../components/foodMenuComponents/Mealtem";
+import MealItem from "../../components/foodMenuComponents/OrderMealtem";
 import {productQuantity} from "../../actions/productQuanitity";
 import {removeFromBasket} from "../../actions/removeAction";
 import {addOrder} from "../../actions/addOrderAction";
 import {resetBasket} from "../../actions/resetBasketAction";
 import {TextInput} from "react-native-web";
-
-
-
-
+import MenuDataService from "../../services/MenuService"
+import {compose} from "redux";
+import {firestoreConnect} from "react-redux-firebase";
+import Card from "../../components/Card";
+import SwitchButton from "switch-button-react-native";
 
 const OrdersWaiterScreen = props => {
 
-    const dataMenuHandler = (pdata) => {
-        setData(pdata);
-    }
 
-
-
-    const [data,setData] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [swipeToClose, setSwipeToLose] = useState(true);
+    const [payment, setPayment] = useState("Card");
 
-    const show=useRef();
-
+    const fliperHanlder = (e) => {
+        if(e ===1){
+            setPayment("Card");
+        }
+        else
+        {
+            setPayment("Cash");
+        }
+    };
 
     const modalOpenHandler = () => {
       setIsOpen(true);
@@ -42,46 +45,47 @@ const OrdersWaiterScreen = props => {
     const {tableNumber} = props.route.params;
 
 
-
-    firebase.database().ref('menu/').on("value", (snapshot) => {
-        let allDishes = [];
-        snapshot.forEach(snap => {
-            allDishes.push(snap.val());
-        });
-        console.log(allDishes + " xxxxxxxxxxxxddddddddd");
-       setData()
-    });
-
+    console.log(props.products);
 
 
     return(
         <View style={styles.screen} >
         <ScrollView  >
-          <CategoryOfItems data={data} category='Zupa'/>
-          <CategoryOfItems data={data} category='Obiad'/>
+          <CategoryOfItems data={props.menu} category='Zupa'/>
+          <CategoryOfItems data={props.menu} category='Obiad'/>
+            <CategoryOfItems data={props.menu} category='Zestaw Obiadowy'/>
+          <CategoryOfItems data={props.menu} category='Deser'/>
+            <CategoryOfItems data={props.menu} category='Napój'/>
         </ScrollView>
             <Button title="Basket" onPress={() => {modalOpenHandler()}} />
-
             <Modal
                 style={styles.modal}
                 isOpen={isOpen}
                 onClosed={modalCloseHandler}
                 >
                 <View style={ styles.btnModal}>
-
                     <Button title="X" color="black" onPress={() => {modalCloseHandler()}}/>
                 </View>
-                <Text>{tableNumber} </Text>
-                {props.products.map(meal =>
-                    <MealItem key = {meal.id} name={meal.name} price={meal.price}/>
+                <View style={styles.headerContainer}>
+                <Text style={ styles.headerTextStyle}>{tableNumber.name} </Text>
+                </View>
+
+                {props.products.listOfCurrentThings.map(meal =>
+                  <Card key = {meal.id} style={styles.Card}>
+                      <MealItem name={meal.name} price={meal.price} quantity={meal.quantity}>
+                          <Button title="+" onPress={()=>props.productQuantity(props.products.listOfCurrentThings, meal,"INCREASE")}/>
+                          <Button title="X" onPress={()=>props.removeFromBasket(props.products.listOfCurrentThings, meal)}/>
+                          <Button title="-" onPress={()=>props.productQuantity(props.products.listOfCurrentThings, meal,"DECREASE")}/></MealItem>
+                  </Card>
                 )
                 }
-                <Button title="Zamów" color="black" onPress={() => { props.addOrder(props.finalizeOrder.listOfOrders, {table: {tableNumber}, waiter: "www", customerid:"111", listOfCurrentThings:props.products });
-
-                    console.log(props.finalizeOrder);
+              <View style={styles.btnOrder} >
+                  <SwitchButton onValueChange={(e) => fliperHanlder(e)} btnBackgroundColor = 'black'  text1='Card' text2='Cash' width="200px" />
+                <Button title="Order" color="black"  onPress={() => { props.addOrder(props.finalizeOrder, {table: tableNumber.name, listOfCurrentThings:props.products.listOfCurrentThings, orderCost: props.products.shoppingCartCost, payment: payment });
                     props.resetBasket()}}/>
+                  <Text>{props.products.shoppingCartCost.toFixed(2)} zł</Text>
+              </View>
             </Modal>
-
         </View>
     );
 
@@ -101,13 +105,16 @@ const styles = StyleSheet.create({
         padding: 20,
 
     },
-    textStyle:{
+    headerContainer:{
+      marginTop: 20,
+    },
+
+    headerTextStyle:{
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center'
     },
     modal: {
-        justifyContent: 'center',
         alignItems: 'center'
     },
     btn: {
@@ -122,13 +129,19 @@ const styles = StyleSheet.create({
         right: 0,
         width: 50,
         height: 50,
-        backgroundColor: "transparent"
+        backgroundColor: "transparent",
     },
+    btnOrder: {
+        position: "absolute",
+        bottom: 0,
+        alignItems: 'center'
+    }
 });
 const mapStateToProps = state => ({
-    products: state.orderState.listOfCurrentThings,
-    finalizeOrder: state.finalizeOrderState
+    products: state.orderState,
+    finalizeOrder: state.firestore.ordered.currentOrders || state.finalizeOrderState.listOfOrders,
+    menu: state.firestore.ordered.menu  || state.finalizeOrderState.listOfOrders
 })
 
 
-export default connect(mapStateToProps,{productQuantity, removeFromBasket, resetBasket, addOrder})(OrdersWaiterScreen);
+export default compose(connect(mapStateToProps,{productQuantity, removeFromBasket, resetBasket, addOrder}),firestoreConnect(() => ['menu', 'currentOrders']))(OrdersWaiterScreen);

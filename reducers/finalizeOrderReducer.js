@@ -1,5 +1,5 @@
 import {ADD_ORDER, RESET_ORDERS} from "../actions/types"
-
+import firebase from "firebase";
 const initialState = {
     listOfOrders: []
 }

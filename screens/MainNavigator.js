@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Button} from 'react-native';
+import {View, Text, StyleSheet, Button, ActivityIndicator} from 'react-native';
 import {connect} from "react-redux";
 
 import {NavigationContainer} from "@react-navigation/native";
@@ -13,32 +13,50 @@ import MenuChefScreen from "./chefScreens/MenuChefScreen";
 import ChooseTableScreen from "./waiterScreens/ChooseTableScreen";
 import OrdersWaiterScreen from "./waiterScreens/OrdersWaiterScreen";
 import ListOfDishesScreen from "./waiterScreens/ListOfDishesScreen";
-
+import {signOut} from "../actions/signOutAction";
+import OrdersChefScreen from "./chefScreens/OrdersChefScreen";
 
 const Stack = createStackNavigator();
 
 const MainNavigator = props => {
+console.log(props.profile);
     return(
-        <NavigationContainer >
-
-                {props.login.isLoggedIn === false ? (
+        <NavigationContainer style={styles.screen}>
+                {!props.auth.uid ? (
                     <Stack.Navigator>
                         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
                     </Stack.Navigator>)
                     : (
-                        props.login.email === 'Barti@interia.eu' ? (
+                        props.auth.isLoaded && props.profile.role? (
+                    props.profile.role === 'Waiter' ? (
                     <Stack.Navigator>
-                        <Stack.Screen name="MenuWaiter" component={MenuWaiterScreen} />
+                        <Stack.Screen name="Menu Waiter" component={MenuWaiterScreen} options={{
+                            headerRight: () => (
+                                <Button
+                                    onPress={() => props.signOut()}
+                                    title="Log out"
+                                />
+                            ),
+                        }} />
                         <Stack.Screen name="ChooseTable" component={ChooseTableScreen} />
                         <Stack.Screen name="OrderWaiter" component={OrdersWaiterScreen} />
-                        <Stack.Screen name="ListWaiter" component={ListOfDishesScreen} />
+                        <Stack.Screen name='Waiter List of Orders' component={ListOfDishesScreen} />
                     </Stack.Navigator>)
                             :
                             (
                             <Stack.Navigator>
-                                <Stack.Screen name="MenuChef" component={MenuChefScreen} />
+                                <Stack.Screen name="MenuChef" component={MenuChefScreen} options={{
+                                    headerRight: () => (
+                                        <Button
+                                            onPress={() => props.signOut()}
+                                            title="Log out"
+                                        />
+                                    ),
+                                }} />
+                                <Stack.Screen name="OrdersChef" component={OrdersChefScreen} />
                             </Stack.Navigator>
-                            )
+                            )):
+                            (<ActivityIndicator size="large" style={styles.indicator} />)
                     )}
 
         </NavigationContainer>
@@ -49,7 +67,8 @@ const MainNavigator = props => {
 const styles = StyleSheet.create({
     screen:{
         flex:1,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     Card: {
         marginTop: 20,
@@ -60,6 +79,10 @@ const styles = StyleSheet.create({
         padding: 20,
 
     },
+    indicator:{
+        alignItems: 'center',
+        marginTop: '100%'
+    },
     textStyle:{
         fontSize: 24,
         fontWeight: 'bold',
@@ -69,8 +92,10 @@ const styles = StyleSheet.create({
 
 function  mapStateToProps(state) {
     return{
-        login: state.userState
+        login: state.authState,
+        auth: state.firebase.auth,
+        profile: state.firebase.profile
     }
 }
 
-export default connect(mapStateToProps)(MainNavigator);
+export default connect(mapStateToProps, {signOut})(MainNavigator);

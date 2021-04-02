@@ -9,20 +9,34 @@ import LoginScreen from "./screens/LoginScreen";
 import MenuWaiterScreen from "./screens/waiterScreens/MenuWaiterScreen";
 import MenuChefScreen from "./screens/chefScreens/MenuChefScreen";
 
-import firebase  from "firebase";
+
 import {firebaseConfig} from "./config";
 
 
-import {store,persistor} from "./store";
+import {store} from "./store";
 import {Provider} from "react-redux";
 import {selectIdValue} from "@reduxjs/toolkit/src/entities/utils";
 import MainNavigator from "./screens/MainNavigator";
 
-const Stack = createStackNavigator();
+import {reduxFirestore, getFirestore, createFirestoreInstance} from "redux-firestore";
+import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const Stack = createStackNavigator();
+import firebase from './config'
+import 'firebase/firestore';
+
+const rrfConfig = {
+  userProfile: 'users',
+  useFirestoreForProfile: true
+};
+
+const rrfProps = {
+  firebase,
+  useFirestoreForProfile: true,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance
+};
 
 
 
@@ -30,7 +44,9 @@ export default function App() {
 
   return (
     <Provider store={store} >
+      <ReactReduxFirebaseProvider {...rrfProps}>
     <MainNavigator />
+      </ReactReduxFirebaseProvider>
     </Provider>
   );
 }

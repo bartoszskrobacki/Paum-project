@@ -1,4 +1,11 @@
-import {ADD_PRODUCT_BASKET, QUANTITY_BASKET, REMOVE_PRODUCT_BASKET, GET_NUMBERS_BASKET, RESET_BASKET} from "../actions/types";
+import {
+    ADD_PRODUCT_BASKET,
+    QUANTITY_BASKET,
+    REMOVE_PRODUCT_BASKET,
+    GET_NUMBERS_BASKET,
+    RESET_BASKET,
+    ADD_PRODUCT_ERROR
+} from "../actions/types";
 
 
 const initialState = {
@@ -39,6 +46,11 @@ export default (state = initialState, action) => {
                 listOfCurrentThings: action.payload.cartItems
             };
         case GET_NUMBERS_BASKET:
+            return {
+                ...state
+            };
+        case ADD_PRODUCT_ERROR:
+            console.log("ERROR");
             return {
                 ...state
             };

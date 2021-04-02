@@ -12,7 +12,6 @@ export const removeFromBasket = (cartItems, product) => {
             numberOfProducts = meal.quantity;
             costOfTheProducts = meal.quantity * meal.price;
             cartItems.splice(i,1);
-
         }
         i++;
     });

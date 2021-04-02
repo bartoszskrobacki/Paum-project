@@ -9,22 +9,22 @@ const ChooseTableScreen = props => {
         <View style={styles.screen} >
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                  <Button title='Table 1' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: 1})}}/>
+                  <Button title='Table 1' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: {name: "Table 1"}})}}/>
                 </View>
             </Card>
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                    <Button title='Table 2' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: 2})}} />
+                    <Button title='Table 2' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: {name: "Table 2"}})}} />
                 </View>
             </Card>
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                    <Button title='Table 3' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: 3})}} />
+                    <Button title='Table 3' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: {name: "Table 3"}})}} />
                 </View>
             </Card>
             <Card style={styles.Card}>
                 <View style={styles.menuOptionContainer}>
-                    <Button title='Table 4' onPress = {() => {props.navigation.navigate('OrderWaiter', {tableNumber: 4})}}/>
+                    <Button title='Table 4' onPress = {() => {props.navigation.navigate('OrderWaiter',{tableNumber: {name: "Table 4"}})}}/>
                 </View>
             </Card>
         </View>

@@ -1,9 +1,9 @@
 import { ADD_PRODUCT_BASKET} from "./types";
+import {ADD_PRODUCT_ERROR} from "./types";
+import {getFirebase} from "react-redux-firebase";
+import {getFirestore} from "redux-firestore";
 
 export const addAction = (cartItems, product) => {
-
-    console.log(product.name);
-    console.log(cartItems);
 
     let productAlreadyInCart = false;
     let costOfTheProduct = product.price;
@@ -20,13 +20,14 @@ export const addAction = (cartItems, product) => {
     }
 
     return(dispatch) => {
-
-        dispatch({
-            type: ADD_PRODUCT_BASKET,
-            payload: {cartItems, costOfTheProduct}
-        })
+            dispatch({
+                type: ADD_PRODUCT_BASKET,
+                payload: {cartItems, costOfTheProduct}
+            })
     }
 
 };
+
+
 
 

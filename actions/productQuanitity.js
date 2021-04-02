@@ -1,15 +1,15 @@
 import { QUANTITY_BASKET} from "./types";
 
 export const productQuantity = (cartItems, product, increase) =>{
-    let value
+    let value;
     let costOfTheProduct = product.price;
+    console.log("Product qua");
     cartItems.forEach((meal) =>
     {
         if(meal.id === product.id) {
             if(increase === "INCREASE") {
                 value = 1;
                 meal.quantity++;
-
             }
             else {
                 value=-1;

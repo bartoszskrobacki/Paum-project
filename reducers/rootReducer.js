@@ -1,11 +1,15 @@
 import {combineReducers} from "redux";
-import userReducer from "./userReducer";
+import authReducer from "./authReducer";
 import orderReducer from "./orderReducer";
 import finalizeOrderReducer from "./finalizeOrderReducer";
-
+import {firebaseReducer} from 'react-redux-firebase'
+import 'firebase/firestore'
+import { firestoreReducer } from 'redux-firestore'
 
 export default combineReducers({
-    userState: userReducer,
+    authState: authReducer,
     orderState: orderReducer,
-    finalizeOrderState: finalizeOrderReducer
+    finalizeOrderState: finalizeOrderReducer,
+    firebase: firebaseReducer,
+    firestore: firestoreReducer
 })

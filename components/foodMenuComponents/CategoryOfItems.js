@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, StyleSheet, Text, FlatList, Button} from 'react-native'
 import Card from "../Card";
-import MealItem from "./Mealtem";
+import MealItem from "./MenuMealItem";
 import {addAction }from "./../../actions/addAction"
 import {connect} from "react-redux";
 
