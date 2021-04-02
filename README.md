@@ -30,9 +30,10 @@ In project directory, you can run:
 
 ```sh
 cd restaurantMobileApplication/
+npm install
 expo start
 ```
-
+Then application can be opened in expo application on your Android or iOS device.
 ## Screenshots
 ![Login screen](./images/loginScreen.png)
 ![Waiter screen](./images/waiterScreen.png)
