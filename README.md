@@ -23,7 +23,7 @@ Restaurant web application uses a lot of open source project to work properly:
 
 
 
-## Installation
+## Setup
 
 Restaurant web application requires [Node.js](https://nodejs.org/) v10+ to run.
 In project directory, you can run:
